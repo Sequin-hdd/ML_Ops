@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import Login from './login';
 import Register from './register';
+import Log from './log';
 import * as serviceWorker from './serviceWorker';
 import { Router, Route, Switch } from "react-router-dom";
 import { createBrowserHistory } from "history";
@@ -16,6 +17,7 @@ ReactDOM.render(
         <Switch>
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
+            <Route path="/log" component={Log} />
             <Route path="/" component={App} />
         </Switch>
     </Router>,

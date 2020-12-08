@@ -74,7 +74,8 @@ Panel.propTypes = {
   value: PropTypes.any.isRequired,
 };
 
-function App() {
+function App(props) {
+  const a = props.a ? a: "";
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const [panelValue, setPanelValue] = React.useState(0);
