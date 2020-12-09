@@ -12,7 +12,7 @@ export default [
         avatarUrl: '/static/images/avatars/avatar_3.png',
         createdAt: 1555016400000,
         email: 'ekaterina.tankova@devias.io',
-        name: 'Ekaterina Tankova',
+        name: 'Ekaterina Tankova Haaa',
         phone: '304-428-3097'
     },
     {

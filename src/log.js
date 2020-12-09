@@ -29,6 +29,37 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import Collapse from '@material-ui/core/Collapse';
+import Chip from '@material-ui/core/Chip';
+import Paper from '@material-ui/core/Paper';
+import TagFacesIcon from '@material-ui/icons/TagFaces';
+import DoneIcon from '@material-ui/icons/Done';
+import { createMuiTheme } from '@material-ui/core/styles';
+import {ThemeProvider} from "@material-ui/styles";
+import Tooltip from '@material-ui/core/Tooltip';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
+
+
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            light: '#80e27e',
+            main: '#4caf50',
+            dark: '#087f23',
+            contrastText: '#fff',
+        },
+        secondary: {
+            light: '#ff7961',
+            main: '#f44336',
+            dark: '#ba000d',
+            contrastText: '#fff',
+        },
+    },
+});
 
 
 const useStyles = makeStyles((theme) => ({
@@ -53,6 +84,17 @@ const useStyles = makeStyles((theme) => ({
             borderBottom: 'unset',
         },
     },
+    paperRoot: {
+        display: 'flex',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        listStyle: 'none',
+        padding: theme.spacing(0.5),
+        margin: 0,
+    },
+    chip: {
+        margin: theme.spacing(0.5),
+    },
 }));
 
 
@@ -70,6 +112,117 @@ function createData(name, calories, fat, carbs, protein, price) {
             { date: '2020-01-02', customerId: 'Anonymous', amount: 1 },
         ],
     };
+}
+
+const longText = `
+Aliquam eget finibus ante, non facilisis lectus. Sed vitae dignissim est, vel aliquam tellus.
+Praesent non nunc mollis, fermentum neque at, semper arcu.
+Nullam eget est sed sem iaculis gravida eget vitae justo.
+`;
+
+
+
+function ChipsArray() {
+    const classes = useStyles();
+    const [chipData, setChipData] = React.useState([
+        { key: 0, label: 'Angular' },
+        { key: 1, label: 'jQuery' },
+        { key: 2, label: 'Polymer' },
+        { key: 3, label: 'React' },
+        { key: 4, label: 'Vue.js' },
+    ]);
+
+    const handleDelete = (chipToDelete) => () => {
+        setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+    };
+
+    const [open, setOpen] = React.useState(false);
+    const [scroll, setScroll] = React.useState('paper');
+
+    const handleClickOpen = (scrollType) => () => {
+        setOpen(true);
+        setScroll(scrollType);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const descriptionElementRef = React.useRef(null);
+    React.useEffect(() => {
+        if (open) {
+            const { current: descriptionElement } = descriptionElementRef;
+            if (descriptionElement !== null) {
+                descriptionElement.focus();
+            }
+        }
+    }, [open]);
+
+    return (
+        <ThemeProvider theme={theme}>
+        <Paper component="ul" className={classes.paperRoot} variant="outlined">
+            {chipData.map((data) => {
+
+
+                return (
+                    <li key={data.key}>
+                    <Tooltip
+                        arrow
+                        title={
+                            <React.Fragment>
+                                <Typography color="inherit">Tooltip with HTML</Typography>
+                                <em>{"And here's"}</em> <b>{'some'}</b> <u>{'amazing content'}</u>.{' '}
+                                {"It's very engaging. Right?"}
+                            </React.Fragment>
+                        }
+                             classes={{ tooltip: classes.customWidth }} placement="top">
+                        <Chip
+                            label={data.label}
+                            // onDelete={data.label === 'React' ? undefined : handleDelete(data)}
+                            onClick={handleClickOpen('paper')}
+                            deleteIcon={<DoneIcon />}
+                            onDelete={handleDelete}
+                            className={classes.chip}
+                            clickable
+                            color="primary"
+                        />
+                    </Tooltip>
+                    </li>
+                );
+            })}
+        </Paper>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                scroll={scroll}
+                aria-labelledby="scroll-dialog-title"
+                aria-describedby="scroll-dialog-description"
+            >
+                <DialogTitle id="scroll-dialog-title">Subscribe</DialogTitle>
+                <DialogContent dividers={scroll === 'paper'}>
+                    <DialogContentText
+                        id="scroll-dialog-description"
+                        ref={descriptionElementRef}
+                        tabIndex={-1}
+                    >
+                        {[...new Array(50)]
+                            .map(
+                                () => `Cras mattis consectetur purus sit amet fermentum.
+Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
+                            )
+                            .join('\n')}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </ThemeProvider>
+    );
 }
 
 
@@ -132,11 +285,12 @@ function Row(props) {
             <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
-                        <Box margin={1}>
+                        <Box margin={5}>
                             <Typography variant="h6" gutterBottom component="div">
                                 Tasks
                             </Typography>
-                            <Table size="small" aria-label="purchases">
+                            <ChipsArray />
+                            <Table size="small" aria-label="purchases" style={{marginTop:"20px"}}>
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>Date</TableCell>
@@ -158,6 +312,7 @@ function Row(props) {
                                     {/*        </TableCell>*/}
                                     {/*    </TableRow>*/}
                                     {/*))}*/}
+
                                 </TableBody>
                             </Table>
                         </Box>
@@ -259,7 +414,7 @@ const Results = ({ className, customers, ...rest }) => {
                         </TableHead>
                         <TableBody>
                             {customers.slice(0, limit).map((customer) => (
-                                <Row customer={customer}/>
+                                <Row dag={customer}/>
                             ))}
                         </TableBody>
                     </Table>
