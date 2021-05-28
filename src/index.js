@@ -21,7 +21,6 @@ ReactDOM.render(
             <Route path="/log" component={Log} />
             <Route path="/modelList" component={ModelList} />
             <Route path="/" component={App} />
-
         </Switch>
     </Router>,
     document.getElementById('root')
